@@ -1,4 +1,4 @@
-package example
+package tools
 
 import tyrian.{Html, Tyrian, Sub, Cmd, Style}
 import tyrian.Html._
