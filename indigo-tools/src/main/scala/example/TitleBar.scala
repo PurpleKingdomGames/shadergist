@@ -1,8 +1,7 @@
 package example
 
-import scalm.{Html, Scalm, Sub, Cmd}
-import scalm.Html._
-import scalm.Component
+import tyrian.{Html, Tyrian, Sub, Cmd}
+import tyrian.Html._
 
 object TitleBar:
   def view[Msg]: Html[Msg] =

@@ -11,7 +11,7 @@ lazy val indigoTools =
       scalaJSUseMainModuleInitializer := true,
       scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
       libraryDependencies ++= Seq(
-        "davesmith00000" %%% "scalm" % "0.0.1-SNAPSHOT",
+        "io.indigoengine" %%% "tyrian" % "0.2.0-SNAPSHOT",
         "org.scalameta" %%% "munit" % "0.7.26" % Test
       ),
       testFrameworks += new TestFramework("munit.Framework")

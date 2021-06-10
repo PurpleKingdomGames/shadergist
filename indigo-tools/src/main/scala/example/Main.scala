@@ -1,7 +1,7 @@
 package example
 
-import scalm.{Html, Scalm, Sub, Cmd, Style}
-import scalm.Html._
+import tyrian.{Html, Tyrian, Sub, Cmd, Style}
+import tyrian.Html._
 import org.scalajs.dom.document
 
 object Main:
@@ -27,7 +27,12 @@ object Main:
         text(" "),
         model match
           case SitePage.Home =>
-            img(src("images/indigo_logo_full.svg"), height("300px"), `class`("fade-in-image"), styles(Styles.centerImage))
+            img(
+              src("images/indigo_logo_full.svg"),
+              height("300px"),
+              `class`("fade-in-image"),
+              styles(Styles.centerImage)
+            )
 
           case SitePage.Bump2Normal =>
             text("bump to norml")
@@ -41,7 +46,7 @@ object Main:
     Sub.Empty
 
   def main(args: Array[String]): Unit =
-    Scalm.start(document.getElementById("myapp"), init, update, view, subscriptions)
+    Tyrian.start(document.getElementById("myapp"), init, update, view, subscriptions)
 
 enum SitePage:
   case Home, Bump2Normal, BitmapFont
