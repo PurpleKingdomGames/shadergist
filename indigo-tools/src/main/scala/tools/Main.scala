@@ -14,7 +14,12 @@ object Main:
 
   def update(msg: Msg, model: Model): (Model, Cmd[Msg]) =
     msg match
-      case Msg.NavigateTo(page) => (model.navigateTo(page), Cmd.Empty)
+      case Msg.NavigateTo(page) =>
+        (model.navigateTo(page), Cmd.Empty)
+
+      case e: Msg.BumpToNormalMsg =>
+        val (m, cmd) = BumpToNormal.update(e, model.bumpToNormal)
+        (model.copy(bumpToNormal = m), cmd)
 
   def view(model: Model): Html[Msg] =
     div(`class`("full-width-container p-0"))(
@@ -26,7 +31,7 @@ object Main:
             Home.view
 
           case SitePage.BumpToNormal =>
-            BumpToNormal.view
+            BumpToNormal.view(model.bumpToNormal)
 
           case SitePage.FourLightsToNormal =>
             FourLightsToNormal.view
