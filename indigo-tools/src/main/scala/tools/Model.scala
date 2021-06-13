@@ -1,8 +1,10 @@
 package tools
 
-import tools.pages.ImgData
+import tools.cmds.FileReader
 
-final case class Model(page: SitePage, bumpToNormal: Option[ImgData]):
+import org.scalajs.dom.html
+
+final case class Model(page: SitePage, bumpToNormal: Option[FileReader.File[html.Image]]):
   def navigateTo(newPage: SitePage): Model =
     this.copy(page = newPage)
 
