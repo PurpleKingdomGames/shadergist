@@ -23,6 +23,7 @@ object FileReader:
           fileReader.addEventListener("load", (e: Event) => {
             observer.onNext(
               File(
+                name = file.name,
                 path = e.target.asInstanceOf[js.Dynamic].result.asInstanceOf[String],
                 data = fileReader.result
               )
@@ -37,13 +38,13 @@ object FileReader:
 
   def readImage[Msg](inputFieldId: String, resultToMessage: Either[Error, File[html.Image]] => Msg): Cmd[Msg] =
     val cast: Either[Error, File[js.Any]] => Either[Error, File[html.Image]] =
-      _.map(fi => File(fi.path, fi.data.asInstanceOf[html.Image]))
+      _.map(fi => File(fi.name, fi.path, fi.data.asInstanceOf[html.Image]))
     read(inputFieldId, cast andThen resultToMessage)
 
   def readText[Msg](inputFieldId: String, resultToMessage: Either[Error, File[String]] => Msg): Cmd[Msg] =
     val cast: Either[Error, File[js.Any]] => Either[Error, File[String]] =
-      _.map(fi => File(fi.path, fi.data.asInstanceOf[String]))
+      _.map(fi => File(fi.name, fi.path, fi.data.asInstanceOf[String]))
     read(inputFieldId, cast andThen resultToMessage)
 
   final case class Error(message: String)
-  final case class File[A](path: String, data: A)
+  final case class File[A](name: String, path: String, data: A)

@@ -14,3 +14,5 @@ object Msg:
     case FileSelected(inputFieldId: String) extends BumpToNormalMsg
     case LoadFailed(message: String) extends BumpToNormalMsg
     case LoadSucceeded(image: FileReader.File[html.Image]) extends BumpToNormalMsg
+    case ImageLoadFailed(message: String) extends BumpToNormalMsg
+    case ImageLoadSucceeded(image: html.Image) extends BumpToNormalMsg
