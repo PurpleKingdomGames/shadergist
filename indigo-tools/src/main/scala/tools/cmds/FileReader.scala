@@ -20,16 +20,16 @@ object FileReader:
       Task
         .RunObservable[Error, File[js.Any]] { observer =>
           val fileReader = new dom.FileReader()
-          fileReader.readAsDataURL(file)
-          fileReader.onload = (e: Event) => {
+          fileReader.addEventListener("load", (e: Event) => {
             observer.onNext(
               File(
                 path = e.target.asInstanceOf[js.Dynamic].result.asInstanceOf[String],
                 data = fileReader.result
               )
             )
-          }
+          }, false)
           fileReader.onerror = _ => observer.onError(Error(s"Error reading file from input field '$inputFieldId'"))
+          fileReader.readAsDataURL(file)
 
           () => ()
         }
