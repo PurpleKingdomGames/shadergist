@@ -4,10 +4,16 @@ import tyrian.Html
 import tyrian.Html._
 
 object SubNav:
+  private val nav: List[Html[Msg]] =
+    List(
+      SitePage.Home,
+      SitePage.BumpToNormal,
+      SitePage.FourLightsToNormal,
+      SitePage.BitmapFont
+    ).map(makeItem)
+
   def view: Html[Msg] =
-    ol()(
-      li()(a(href("#"), onClick(Msg.NavigateTo(SitePage.Home)))(text("home"))),
-      li()(a(href("#"), onClick(Msg.NavigateTo(SitePage.BumpToNormal)))(text("bump to normal"))),
-      li()(a(href("#"), onClick(Msg.NavigateTo(SitePage.FourLightsToNormal)))(text("four lights to normal"))),
-      li()(a(href("#"), onClick(Msg.NavigateTo(SitePage.BitmapFont)))(text("font"))),
-    )
+    ol()(nav: _*)
+
+  private def makeItem(page: SitePage): Html[Msg] =
+    li()(a(href(page.slug), onClick(Msg.NavigateTo(page)))(text(page.label)))

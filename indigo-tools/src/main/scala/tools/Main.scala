@@ -6,11 +6,12 @@ import tyrian.Html._
 import pages._
 
 import org.scalajs.dom.document
+import org.scalajs.dom.window
 
 object Main:
 
   def init: (Model, Cmd[Msg]) =
-    (Model.initial, Cmd.Empty)
+    (Model.initial(window.location.hash), Cmd.Empty)
 
   def update(msg: Msg, model: Model): (Model, Cmd[Msg]) =
     msg match
