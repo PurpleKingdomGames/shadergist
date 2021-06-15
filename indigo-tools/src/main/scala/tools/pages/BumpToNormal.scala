@@ -7,6 +7,7 @@ import tools.Msg.BumpToNormalMsg
 import tools.cmds.FileReader
 import tools.cmds.ImageLoader
 import tools.cmds.Logger
+import tools.utils.Sobel
 
 import org.scalajs.dom.html
 import org.scalajs.dom.document
@@ -57,21 +58,17 @@ object BumpToNormal:
           i += 4
 
         // Convert to normal - Sobel method
-        i = 0
 
+        // Clone the data to avoid reading and writing at the same time.
         val readFromData = data ++ new js.Array[Double]()
 
-        val redKernel: List[Double] =
-          List(-1, 0, 1, -2, 0, 2, -1, 0, 1)
-        val greenKernel: List[Double] =
-          List(1, 2, 1, 0, 0, 0, -1, -2, -1)
-
+        i = 0
         while i < readFromData.length do
-          val samples = samplesGrid(i, readFromData.length, img.width, 4).toList
+          val samples = Sobel.samplesGrid(i, readFromData.length, img.width, 4).toList
 
           val red =
             samples
-              .zip(redKernel)
+              .zip(Sobel.kernelX)
               .map {
                 case (Some(i), k) =>
                   readFromData(i).toDouble * k
@@ -83,7 +80,7 @@ object BumpToNormal:
 
           val green =
             samples
-              .zip(greenKernel)
+              .zip(Sobel.kernelY)
               .map {
                 case (Some(i), k) =>
                   readFromData(i).toDouble * k
@@ -93,11 +90,9 @@ object BumpToNormal:
               }
               .sum
 
-          val blue = 255
-
-          data(i) = 128 + red       // rGamma
-          data(i + 1) = 128 + green // gGamma
-          data(i + 2) = blue
+          data(i) = 128 + red
+          data(i + 1) = 128 + green
+          data(i + 2) = 255
           i += 4
 
         ctx.putImageData(imageData, 0, 0)
@@ -141,49 +136,3 @@ object BumpToNormal:
     case Right(img) =>
       BumpToNormalMsg.ImageLoadSucceeded(img)
   }
-
-  def samplesGrid(center: Int, totalCount: Int, width: Int, multiplier: Int): ConvolutionSamples =
-    val maxRows = Math.floor(((totalCount / multiplier) - 1) / width)
-
-    val x = (center / multiplier) % width
-    val y = Math.floor(center / multiplier / width)
-
-    val l = x - 1
-    val r = x + 1
-    val a = y - 1
-    val b = y + 1
-
-    val left       = if l < 0 then None else Some(center - multiplier)
-    val right      = if r > width - 1 then None else Some(center + multiplier)
-    val aboveLeft  = if a < 0 || l < 0 then None else Some(center - (width * multiplier))
-    val above      = if a < 0 then None else Some(center - (width * multiplier))
-    val aboveRight = if a < 0 || r > width - 1 then None else Some(center - (width * multiplier))
-    val belowLeft  = if b > maxRows || l < 0 then None else Some(center + (width * multiplier))
-    val below      = if b > maxRows then None else Some(center + (width * multiplier))
-    val belowRight = if b > maxRows || r > width - 1 then None else Some(center + (width * multiplier))
-
-    ConvolutionSamples(
-      tl = aboveLeft,
-      tc = above,
-      tr = aboveRight,
-      ml = left,
-      mc = center,
-      mr = right,
-      bl = belowLeft,
-      bc = below,
-      br = belowRight
-    )
-
-final case class ConvolutionSamples(
-    tl: Option[Int],
-    tc: Option[Int],
-    tr: Option[Int],
-    ml: Option[Int],
-    mc: Int,
-    mr: Option[Int],
-    bl: Option[Int],
-    bc: Option[Int],
-    br: Option[Int]
-):
-  def toList: List[Option[Int]] =
-    List(tl, tc, tr, ml, Some(mc), mr, bl, bc, br)
