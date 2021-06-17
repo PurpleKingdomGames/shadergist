@@ -1,6 +1,6 @@
 package tools.cmds
 
-import tyrian.{Cmd, Task}
+import tyrian.Cmd
 
 import org.scalajs.dom
 import org.scalajs.dom.raw
@@ -17,8 +17,7 @@ object FileReader:
     if files.length == 0 then Cmd.Empty
     else
       val file = files.item(0)
-      Task
-        .RunObservable[Error, File[js.Any]] { observer =>
+      Cmd.Run[Error, File[js.Any]] { observer =>
           val fileReader = new dom.FileReader()
           fileReader.addEventListener("load", (e: Event) => {
             observer.onNext(
@@ -32,7 +31,7 @@ object FileReader:
           fileReader.onerror = _ => observer.onError(Error(s"Error reading file from input field '$inputFieldId'"))
           fileReader.readAsDataURL(file)
 
-          () => ()
+          () => (),
         }
         .attempt(resultToMessage)
 

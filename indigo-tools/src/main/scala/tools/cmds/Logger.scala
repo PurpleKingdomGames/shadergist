@@ -1,7 +1,6 @@
 package tools.cmds
 
 import tyrian.Cmd
-import tyrian.Task
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -40,31 +39,31 @@ object Logger:
     }
 
   def consoleLog(messages: String*): Cmd.SideEffect =
-    Task.SideEffect { () =>
+    Cmd.SideEffect { () =>
       consoleLogString(messages.toList.mkString(", "))
-    }.toCmd
+    }
 
   def info(messages: String*): Cmd.SideEffect =
-    Task.SideEffect { () =>
+    Cmd.SideEffect { () =>
       infoString(messages.toList.mkString(", "))
-    }.toCmd
+    }
 
   def error(messages: String*): Cmd.SideEffect =
-    Task.SideEffect { () =>
+    Cmd.SideEffect { () =>
       errorString(messages.toList.mkString(", "))
-    }.toCmd
+    }
 
   def errorOnce(messages: String*): Cmd.SideEffect =
-    Task.SideEffect { () =>
+    Cmd.SideEffect { () =>
       errorOnceString(messages.toList.mkString(", "))
-    }.toCmd
+    }
 
   def debug(messages: String*): Cmd.SideEffect =
-    Task.SideEffect { () =>
+    Cmd.SideEffect { () =>
       debugString(messages.toList.mkString(", "))
-    }.toCmd
+    }
 
   def debugOnce(messages: String*): Cmd.SideEffect =
-    Task.SideEffect { () =>
+    Cmd.SideEffect { () =>
       debugOnceString(messages.toList.mkString(", "))
-    }.toCmd
+    }

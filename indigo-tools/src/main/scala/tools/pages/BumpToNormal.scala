@@ -1,6 +1,6 @@
 package tools.pages
 
-import tyrian.{Html, Cmd, Task}
+import tyrian.{Html, Cmd}
 import tyrian.Html._
 
 import tools.Msg.BumpToNormalMsg
@@ -52,7 +52,7 @@ object BumpToNormal:
         (model, Logger.error(msg))
 
       case BumpToNormalMsg.LoadSucceeded(file) =>
-        val cmds = Cmd.batch(
+        val cmds = Cmd.Batch(
           Logger.info("loaded image", file.name),
           ImageLoader.load(file.path) {
             case Left(e) =>
@@ -69,7 +69,7 @@ object BumpToNormal:
         (model, Logger.error(msg))
 
       case BumpToNormalMsg.ImageLoadSucceeded(img) =>
-        val cmds = Cmd.batch(
+        val cmds = Cmd.Batch(
           Logger.info("loaded the image!"),
           WriteToCanvas.bumpToNormal("bump-to-normal-canvas", img)
         )
@@ -101,7 +101,7 @@ object BumpToNormal:
 object WriteToCanvas:
 
   def bumpToNormal[Msg](canvasName: String, img: html.Image): Cmd[Msg] =
-    Task.SideEffect { () =>
+    Cmd.SideEffect { () =>
       val canvas = document.getElementById(canvasName).asInstanceOf[html.Canvas]
       canvas.width = img.width
       canvas.height = img.height
@@ -161,4 +161,5 @@ object WriteToCanvas:
         i += 4
 
       ctx.putImageData(imageData, 0, 0)
-    }.toCmd
+      ()
+    }
