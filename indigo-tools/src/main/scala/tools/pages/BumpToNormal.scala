@@ -77,8 +77,8 @@ object BumpToNormal:
         (model, cmds)
 
   def view(model: Model): Html[BumpToNormalMsg] =
-    val children: Seq[Html[BumpToNormalMsg]] =
-      Seq(
+    val children: List[Html[BumpToNormalMsg]] =
+      List(
         h1()(text("bump to normal")),
         br,
         input(
@@ -91,12 +91,12 @@ object BumpToNormal:
       )
         ++ {
           model match
-            case None                              => Seq(img(src(defaultImagePath)))
-            case Some(FileReader.File(_, path, _)) => Seq(img(src(path)))
+            case None                              => List(img(src(defaultImagePath)))
+            case Some(FileReader.File(_, path, _)) => List(img(src(path)))
         }
-        ++ Seq(canvas(id("bump-to-normal-canvas"), width("150"), height("150"))())
+        ++ List(canvas(id("bump-to-normal-canvas"), width("150"), height("150"))())
 
-    div()(children: _*)
+    div()(children)
 
 object WriteToCanvas:
 
