@@ -7,16 +7,19 @@ import pages._
 
 import org.scalajs.dom.document
 import org.scalajs.dom.window
+import tools.Msg.BumpToNormalMsg
 
 object Main:
 
   def init: (Model, Cmd[Msg]) =
-    (Model.initial(window.location.hash), Cmd.Empty)
+    val m = Model.initial(window.location.hash)
+
+    (m, changePageCommand(m.page))
 
   def update(msg: Msg, model: Model): (Model, Cmd[Msg]) =
     msg match
       case Msg.NavigateTo(page) =>
-        (model.navigateTo(page), Cmd.Empty)
+        (model.navigateTo(page), changePageCommand(page))
 
       case e: Msg.BumpToNormalMsg =>
         val (m, cmd) = BumpToNormal.update(e, model.bumpToNormal)
@@ -47,3 +50,8 @@ object Main:
 
   def main(args: Array[String]): Unit =
     Tyrian.start(document.getElementById("myapp"), init, update, view, subscriptions)
+
+  def changePageCommand(page: SitePage): Cmd[Msg] =
+    page match
+      case SitePage.BumpToNormal => Cmd.Emit(BumpToNormalMsg.FirstLoad)
+      case _                     => Cmd.Empty

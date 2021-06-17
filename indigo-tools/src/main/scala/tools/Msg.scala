@@ -11,8 +11,9 @@ object Msg:
   final case class NavigateTo(page: SitePage) extends Msg
 
   enum BumpToNormalMsg extends Msg:
-    case FileSelected(inputFieldId: String) extends BumpToNormalMsg
-    case LoadFailed(message: String) extends BumpToNormalMsg
+    case FirstLoad                                         extends BumpToNormalMsg
+    case FileSelected(inputFieldId: String)                extends BumpToNormalMsg
+    case LoadFailed(message: String)                       extends BumpToNormalMsg
     case LoadSucceeded(image: FileReader.File[html.Image]) extends BumpToNormalMsg
-    case ImageLoadFailed(message: String) extends BumpToNormalMsg
-    case ImageLoadSucceeded(image: html.Image) extends BumpToNormalMsg
+    case ImageLoadFailed(message: String)                  extends BumpToNormalMsg
+    case ImageLoadSucceeded(image: html.Image)             extends BumpToNormalMsg
