@@ -94,7 +94,7 @@ object BumpToNormal:
             case None                              => List(img(src(defaultImagePath)))
             case Some(FileReader.File(_, path, _)) => List(img(src(path)))
         }
-        ++ List(canvas(id("bump-to-normal-canvas"), width("150"), height("150"))())
+        ++ List(canvas(id("bump-to-normal-canvas"), width(150), height(150))())
 
     div()(children)
 
