@@ -7,9 +7,13 @@ import tools.Styles
 
 object Home:
   def view: Html[Msg] =
-    img(
-      src("images/indigo_logo_full.svg"),
-      height("300px"),
-      `class`("fade-in-image"),
-      styles(Styles.centerImage)
+    div(
+      // img(
+      //   src("images/indigo_logo_full.svg"),
+      //   height("300px"),
+      //   `class`("fade-in-image"),
+      //   styles(Styles.centerImage)
+      // ),
+      div(id("indigo-container"))(),
+      script(_type("text/javascript"), src("gamestart.js"))()
     )

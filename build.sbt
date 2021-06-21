@@ -9,7 +9,7 @@ lazy val commonSettings =
       "org.scalameta" %%% "munit" % "0.7.26" % Test
     ),
     testFrameworks += new TestFramework("munit.Framework"),
-    Test / scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
   )
 
 lazy val indigoTools =
@@ -19,7 +19,6 @@ lazy val indigoTools =
     .settings(
       name := "indigo-tools",
       scalaJSUseMainModuleInitializer := true,
-      scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
       libraryDependencies ++= Seq(
         "io.indigoengine" %%% "tyrian" % "0.2.0-SNAPSHOT"
       )
@@ -32,7 +31,6 @@ lazy val toy =
     .settings(
       name := "indigo-toy",
       scalaJSUseMainModuleInitializer := true,
-      scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
       libraryDependencies ++= Seq(
         "io.indigoengine" %%% "tyrian" % "0.2.0-SNAPSHOT"
       )
@@ -80,9 +78,24 @@ addCommandAlias(
   "buildToy",
   List(
     "compile",
-    "indigoTools/fastOptJS"
+    "toy/fastOptJS"
   ).mkString(";", ";", "")
 )
 
-addCommandAlias("buildGame", ";compile;fastOptJS;indigoBuild")
-addCommandAlias("runGame", ";compile;fastOptJS;indigoRun")
+addCommandAlias(
+  "buildGame",
+  List(
+    "compile",
+    "toyGame/fastOptJS",
+    "toyGame/indigoBuild"
+  ).mkString(";", ";", "")
+)
+
+addCommandAlias(
+  "runGame",
+  List(
+    "compile",
+    "toyGame/fastOptJS",
+    "toyGame/indigoRun"
+  ).mkString(";", ";", "")
+)
