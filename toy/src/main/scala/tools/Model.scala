@@ -4,13 +4,19 @@ import tools.cmds.FileReader
 
 import org.scalajs.dom.html
 
-final case class Model(page: SitePage):
+final case class Model(page: SitePage, gistPath: String, code: Option[String]):
   def navigateTo(newPage: SitePage): Model =
     this.copy(page = newPage)
 
+  def withCode(newCode: String): Model =
+    this.copy(code = Option(newCode))
+
+  def updateGistPath(newPath: String): Model =
+    this.copy(gistPath = newPath)
+
 object Model:
   def initial(pathName: String): Model =
-    Model(SitePage.fromPathName(pathName))
+    Model(SitePage.fromPathName(pathName), "davesmith00000/43ee912e19f60b0dc1fde9905cbff832", None)
 
 enum SitePage:
   case Home

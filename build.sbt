@@ -9,6 +9,7 @@ lazy val commonSettings =
       "org.scalameta" %%% "munit" % "0.7.26" % Test
     ),
     testFrameworks += new TestFramework("munit.Framework"),
+    Test / scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
   )
 
