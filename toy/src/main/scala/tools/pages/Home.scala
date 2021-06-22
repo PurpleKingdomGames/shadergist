@@ -6,7 +6,7 @@ import tools.Msg
 import tools.Styles
 
 object Home:
-  def view(gistCode: Option[String]): Html[Msg] =
+  def view(gistPath: String, gistCode: Option[String]): Html[Msg] =
     div(_class("container"))(
       div(_class("row"))(
         div(id("indigo-container"), _class("col"))(),
@@ -26,7 +26,7 @@ object Home:
       // ),
       script(_type("text/javascript"), defer)(
         text(
-          """window.indigo.IndigoGame.launch({"width": window.innerWidth.toString(), "height": window.innerHeight.toString()});"""
+          s"""window.indigo.IndigoGame.launch({"width": "550", "height": "400", "gist": "$gistPath"});"""
         )
       )
     )

@@ -44,7 +44,7 @@ object Main:
     div(`class`("full-width-container p-0"))(
       TitleBar.view(model.gistPath),
       div(`class`("full-width-container"), style("padding-top", "40px"))(
-        Home.view(model.code)
+        Home.view(model.gistPath, model.code)
       )
     )
 
