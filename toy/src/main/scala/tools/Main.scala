@@ -13,15 +13,12 @@ import tools.cmds.Logger
 object Main:
 
   def init: (Model, Cmd[Msg]) =
-    val m = Model.initial(window.location.hash)
+    val m = Model.initial(window.location.search)
 
-    (m, Cmd.Empty)
+    (m, if m.gistPath.isEmpty then Cmd.Empty else Cmd.Emit(Msg.LoadGist(m.gistPath)))
 
   def update(msg: Msg, model: Model): (Model, Cmd[Msg]) =
     msg match
-      case Msg.NavigateTo(page) =>
-        (model.navigateTo(page), Cmd.Empty)
-
       case Msg.UpdatePath(path) =>
         (model.updateGistPath(path), Cmd.Empty)
 
@@ -45,11 +42,9 @@ object Main:
 
   def view(model: Model): Html[Msg] =
     div(`class`("full-width-container p-0"))(
-      TitleBar.view,
+      TitleBar.view(model.gistPath),
       div(`class`("full-width-container"), style("padding-top", "40px"))(
-        model.page match
-          case SitePage.Home =>
-            Home.view(model.gistPath, model.code)
+        Home.view(model.code)
       )
     )
 

@@ -4,10 +4,10 @@ import tools.cmds.FileReader
 
 import org.scalajs.dom.html
 
-final case class Model(page: SitePage, gistPath: String, code: Option[String]):
-  def navigateTo(newPage: SitePage): Model =
-    this.copy(page = newPage)
-
+final case class Model(
+    gistPath: String,
+    code: Option[String]
+):
   def withCode(newCode: String): Model =
     this.copy(code = Option(newCode))
 
@@ -15,25 +15,13 @@ final case class Model(page: SitePage, gistPath: String, code: Option[String]):
     this.copy(gistPath = newPath)
 
 object Model:
-  def initial(pathName: String): Model =
-    Model(SitePage.fromPathName(pathName), "davesmith00000/43ee912e19f60b0dc1fde9905cbff832", None)
+  def initial(search: String): Model =
+    search match
+      case p if p.startsWith("?") =>
+        val params   = p.substring(1).split("&").toList
+        val gistPath = params.find(_.startsWith("gist=")).map(_.substring(5)).getOrElse("")
 
-enum SitePage:
-  case Home
+        Model(gistPath, None)
 
-  def slug: String = SitePage.toPathName(this)
-  def label: String = SitePage.toLabel(this)
-
-object SitePage:
-  def toLabel(sitePage: SitePage): String =
-    sitePage match
-      case SitePage.Home               => "home"
-
-  def toPathName(sitePage: SitePage): String =
-    sitePage match
-      case SitePage.Home               => "/"
-
-  def fromPathName(pathName: String): SitePage =
-    pathName match
-      // case "#/gist/1234"   => SitePage.???
-      case _                   => SitePage.Home
+      case _ =>
+        Model("", None)
