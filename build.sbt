@@ -44,7 +44,7 @@ lazy val game =
       )
     )
 
-lazy val tools =
+lazy val shadergist =
   (project in file("."))
     .settings(
       code := { "code ." ! }
