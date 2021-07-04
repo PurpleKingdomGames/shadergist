@@ -16,3 +16,7 @@ About
 See code
 Constant reference
 
+Examples:
+
+Green: davesmith00000/43ee912e19f60b0dc1fde9905cbff832
+Fire: davesmith00000/5a6b585dbc2184a2c215b16a91234c22
