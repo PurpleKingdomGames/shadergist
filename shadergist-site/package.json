@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "bash start.sh",
-    "build": "parcel build index.html --out-dir dist --log-level 4 --no-source-maps"
+    "prebuild": "rm -rf docs",
+    "build": "bash build.sh"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.5",
