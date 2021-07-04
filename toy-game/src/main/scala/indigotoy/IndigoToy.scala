@@ -99,7 +99,7 @@ object IndigoToy extends IndigoDemo[InitialData, InitialData, Model, Size]:
 
           case Model.Ready(code) =>
             // ToyEntity(viewModel)
-            TextBox(s"Ready got:\n$code", viewModel.width, 20)
+            TextBox(s"Ready got: ${code.take(30)} (..)", viewModel.width, 20)
               .withFontFamily(FontFamily.monospace)
               .withColor(RGBA.White)
               .withFontSize(Pixels(12))
