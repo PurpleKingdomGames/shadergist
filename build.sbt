@@ -79,7 +79,7 @@ addCommandAlias(
   "buildToy",
   List(
     "compile",
-    "toy/fastOptJS"
+    "toy/fullOptJS"
   ).mkString(";", ";", "")
 )
 
@@ -87,16 +87,7 @@ addCommandAlias(
   "buildGame",
   List(
     "compile",
-    "toyGame/fastOptJS",
-    "toyGame/indigoBuild"
-  ).mkString(";", ";", "")
-)
-
-addCommandAlias(
-  "runGame",
-  List(
-    "compile",
-    "toyGame/fastOptJS",
-    "toyGame/indigoRun"
+    "toyGame/fullOptJS",
+    "toyGame/indigoBuildFull"
   ).mkString(";", ";", "")
 )
