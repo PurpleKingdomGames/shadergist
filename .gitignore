@@ -16,4 +16,3 @@ semanticdb.sbt
 .cache
 dist
 .DS_Store
-indigo-toy-fastopt.js

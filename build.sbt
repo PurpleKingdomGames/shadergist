@@ -13,39 +13,27 @@ lazy val commonSettings =
     scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) }
   )
 
-lazy val indigoTools =
-  (project in file("indigo-tools"))
+lazy val site =
+  (project in file("shadergist-site"))
     .enablePlugins(ScalaJSPlugin)
     .settings(commonSettings: _*)
     .settings(
-      name := "indigo-tools",
+      name := "shadergist-site",
       scalaJSUseMainModuleInitializer := true,
       libraryDependencies ++= Seq(
         "io.indigoengine" %%% "tyrian" % "0.2.0-SNAPSHOT"
       )
     )
 
-lazy val toy =
-  (project in file("toy"))
-    .enablePlugins(ScalaJSPlugin)
-    .settings(commonSettings: _*)
-    .settings(
-      name := "indigo-toy",
-      scalaJSUseMainModuleInitializer := true,
-      libraryDependencies ++= Seq(
-        "io.indigoengine" %%% "tyrian" % "0.2.0-SNAPSHOT"
-      )
-    )
-
-lazy val toyGame =
-  (project in file("toy-game"))
+lazy val game =
+  (project in file("shadergist-game"))
     .enablePlugins(ScalaJSPlugin, SbtIndigo)
     .settings(commonSettings: _*)
     .settings(
-      name := "Indigo Toy",
+      name := "shadergist-game",
       version := "0.0.1",
       showCursor := true,
-      title := "My Game - Made with Indigo",
+      title := "shadergist",
       gameAssetsDirectory := "assets",
       windowStartWidth := 550,
       windowStartHeight := 400,
@@ -62,24 +50,16 @@ lazy val tools =
       code := { "code ." ! }
     )
     .enablePlugins(ScalaJSPlugin)
-    .aggregate(indigoTools, toy, toyGame)
+    .aggregate(site, game)
 
 lazy val code =
   taskKey[Unit]("Launch VSCode in the current directory")
 
 addCommandAlias(
-  "buildTools",
+  "buildSite",
   List(
     "compile",
-    "indigoTools/fastOptJS"
-  ).mkString(";", ";", "")
-)
-
-addCommandAlias(
-  "buildToy",
-  List(
-    "compile",
-    "toy/fullOptJS"
+    "site/fullOptJS"
   ).mkString(";", ";", "")
 )
 
@@ -87,7 +67,15 @@ addCommandAlias(
   "buildGame",
   List(
     "compile",
-    "toyGame/fullOptJS",
-    "toyGame/indigoBuildFull"
+    "game/fullOptJS",
+    "game/indigoBuildFull"
+  ).mkString(";", ";", "")
+)
+
+addCommandAlias(
+  "buildAll",
+  List(
+    "buildGame",
+    "buildSite"
   ).mkString(";", ";", "")
 )
