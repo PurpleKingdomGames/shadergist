@@ -21,44 +21,61 @@ object IndigoToy extends IndigoDemo[InitialData, InitialData, Model, Size]:
           GameViewport(320, 200)
       }
 
-    val maybeGist = flags.get("gist").flatMap(s => if s.isEmpty then None else Some(s))
-    val assetName = AssetName("shader gist")
-    // val assets: Set[AssetType] = maybeGist match
-    //   case Some(p) =>
-    //     Set(AssetType.Text(assetName, AssetPath(s"https://gist.githubusercontent.com/$p/raw")))
-    //   case None =>
-    //     Set()
+    val maybeGistPath = flags.get("gist").flatMap(s => if s.isEmpty then None else Some(s))
 
     Outcome(
       BootResult(
         GameConfig.default
           .withViewport(gameViewport),
-        InitialData(gameViewport.size, maybeGist)
+        InitialData(gameViewport.size, maybeGistPath)
       )
-      // .withAssets(assets)
-      // .withShaders(ToyEntity.shader(assetName))
     )
 
+  val shaderAssetName: AssetName = AssetName("shader gist")
+
   def setup(bootData: InitialData, assetCollection: AssetCollection, dice: Dice): Outcome[Startup[InitialData]] =
-    Outcome(Startup.Success(bootData))
+    assetCollection.findTextDataByName(shaderAssetName) match
+      case None =>
+        Outcome(Startup.Success(bootData))
+
+      case Some(code) if code.contains("//<indigo-fragment>") && code.contains("//</indigo-fragment>") =>
+        Outcome(
+          Startup
+            .Success(bootData)
+            .addShaders(ToyEntity.shader(shaderAssetName))
+        ).addGlobalEvents(ShaderAdded)
+
+      case Some(_) =>
+        Outcome(
+          Startup
+            .Success(bootData)
+        ).addGlobalEvents(ShaderInvalid)
 
   def initialModel(startupData: InitialData): Outcome[Model] =
-    startupData.maybeGist match
+    startupData.maybeGistPath match
       case None =>
         Outcome(Model.NoGist)
-      case Some(gist) =>
+
+      case Some(gistPath) =>
         Outcome(Model.Loading)
-          .addGlobalEvents(HttpRequest.GET(s"https://gist.githubusercontent.com/$gist/raw"))
+          .addGlobalEvents(
+            LoadAsset(
+              AssetType
+                .Text(shaderAssetName, AssetPath(s"https://gist.githubusercontent.com/$gistPath/raw")),
+              BindingKey("Remote shader load"),
+              true
+            )
+          )
 
   def initialViewModel(startupData: InitialData, model: Model): Outcome[Size] =
     Outcome(startupData.screenSize)
 
   def updateModel(context: FrameContext[InitialData], model: Model): GlobalEvent => Outcome[Model] =
-    case HttpResponse(200, _, code) =>
-      Outcome(Model.Ready(code.getOrElse("No code!")))
+    case ShaderAdded =>
+      Outcome(Model.Ready)
 
-    case HttpResponse(status, _, _) =>
-      Outcome(Model.LoadingError(status, context.startUpData.maybeGist.getOrElse("missing")))
+    case ShaderInvalid =>
+      Outcome(Model.Failed)
 
     case _ =>
       Outcome(model)
@@ -76,7 +93,7 @@ object IndigoToy extends IndigoDemo[InitialData, InitialData, Model, Size]:
           case Model.NoGist =>
             TextBox("No gist to load.", viewModel.width, 20)
               .withFontFamily(FontFamily.monospace)
-              .withColor(RGBA.White)
+              .withColor(RGBA.Yellow)
               .withFontSize(Pixels(12))
               .alignCenter
               .moveTo(0, viewModel.height / 2)
@@ -89,32 +106,28 @@ object IndigoToy extends IndigoDemo[InitialData, InitialData, Model, Size]:
               .alignCenter
               .moveTo(0, viewModel.height / 2)
 
-          case Model.LoadingError(status, path) =>
-            TextBox(s"Error loading gist from '$path', got ${status.toString}", viewModel.width, 20)
+          case Model.Failed =>
+            val gistPath = context.startUpData.maybeGistPath.getOrElse("<missing>")
+            val path     = s"https://gist.githubusercontent.com/$gistPath/raw"
+            TextBox(s"Error loading gist from '$path'", viewModel.width, 20)
               .withFontFamily(FontFamily.monospace)
-              .withColor(RGBA.White)
+              .withColor(RGBA.Red)
               .withFontSize(Pixels(12))
               .alignCenter
               .moveTo(0, viewModel.height / 2)
 
-          case Model.Ready(code) =>
-            // ToyEntity(viewModel)
-            TextBox(s"Ready got: ${code.take(30)} (..)", viewModel.width, 20)
-              .withFontFamily(FontFamily.monospace)
-              .withColor(RGBA.White)
-              .withFontSize(Pixels(12))
-              .alignCenter
-              .moveTo(0, viewModel.height / 2)
+          case Model.Ready =>
+            ToyEntity(viewModel)
       )
     )
 
-final case class InitialData(screenSize: Size, maybeGist: Option[String])
+final case class InitialData(screenSize: Size, maybeGistPath: Option[String])
 
 enum Model derives CanEqual:
-  case NoGist                                  extends Model
-  case Loading                                 extends Model
-  case LoadingError(status: Int, path: String) extends Model
-  case Ready(code: String)                     extends Model
+  case NoGist  extends Model
+  case Loading extends Model
+  case Failed  extends Model
+  case Ready   extends Model
 
 final case class ToyEntity(size: Size) extends EntityNode:
   val position: Point   = Point.zero
@@ -137,3 +150,6 @@ object ToyEntity:
     EntityShader
       .External(shaderId)
       .withFragmentProgram(fragProgram)
+
+case object ShaderAdded   extends GlobalEvent
+case object ShaderInvalid extends GlobalEvent
