@@ -9,7 +9,7 @@ object Home:
   def view(gistPath: String, gistCode: Option[String]): Html[Msg] =
     div(_class("container"))(
       div(_class("row"))(
-        div(id("indigo-container"), _class("col"))(),
+        div(id("indigo-container"), _class("col-md-auto"))(),
         div(_class("col"), styles("overflow" -> "scroll", "font-size" -> "0.75em"))(
           pre()(
             code(_class("language-glsl"))(
@@ -30,7 +30,7 @@ object Home:
       ),
       script(_type("text/javascript"), defer)(
         text(
-          s"""window.indigo.IndigoGame.launch({"width": "550", "height": "400", "gist": "$gistPath"});"""
+          s"""window.indigo.IndigoGame.launch({"width": "400", "height": "400", "gist": "$gistPath"});"""
         )
       )
     )

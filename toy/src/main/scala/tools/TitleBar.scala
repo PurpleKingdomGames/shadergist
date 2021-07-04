@@ -13,19 +13,20 @@ object TitleBar:
           ),
           div(_class("col"), style("text-align", "right"))(
             div(`class`("container g-0"))(
-              form(_class("row g-0"))(
-                div(_class("col"))(
-                  input(
-                    _class("form-control"),
-                    _type("text"),
-                    placeholder("Enter a gist path, e.g. <github-user>/<gist-id>"),
-                    value(gistPath)
-                  )
-                ),
-                div(_class("col-md-auto"))(
-                  button(_type("button"), _class("btn btn-secondary"), onClick(Msg.LoadGist(gistPath)))(text("load gist"))
-                )
-              )
+              // form(_class("row g-0"))(
+              //   div(_class("col"))(
+              //     input(
+              //       _class("form-control"),
+              //       _type("text"),
+              //       placeholder("Enter a gist path, e.g. <github-user>/<gist-id>"),
+              //       value(gistPath),
+              //       onInput(newPath => Msg.UpdatePath(newPath))
+              //     )
+              //   ),
+              //   div(_class("col-md-auto"))(
+              //     button(_type("button"), _class("btn btn-secondary"), onClick(Msg.LoadGist(gistPath)))(text("load gist"))
+              //   )
+              // )
             )
           )
         )
