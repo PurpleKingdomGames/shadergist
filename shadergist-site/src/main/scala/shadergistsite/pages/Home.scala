@@ -15,16 +15,6 @@ object Home:
             code(_class("language-glsl"))(
               gistCode.map(c => List(text(c))).getOrElse(Nil)
             )
-          ),
-          script(_type("text/javascript"))(
-            gistCode match
-              case None =>
-                text("")
-
-              case Some(_) =>
-                text(
-                  s"""window.Prism.highlightAll();"""
-                )
           )
         )
       ),

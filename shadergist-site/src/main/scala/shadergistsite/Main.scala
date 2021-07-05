@@ -8,6 +8,8 @@ import pages._
 
 import org.scalajs.dom.document
 import org.scalajs.dom.window
+import scala.scalajs.js
+
 import shadergistsite.cmds.Logger
 
 object Main:
@@ -19,9 +21,6 @@ object Main:
 
   def update(msg: Msg, model: Model): (Model, Cmd[Msg]) =
     msg match
-      case Msg.UpdatePath(path) =>
-        (model.updateGistPath(path), Cmd.Empty)
-
       case Msg.LoadGist(gistPath) =>
         (
           model,
@@ -34,11 +33,14 @@ object Main:
           )
         )
 
+      case Msg.UpdatePath(path) =>
+        (model.updateGistPath(path), Cmd.Empty)
+
       case Msg.LoadGistError(e) =>
         (model, Logger.error(e))
 
       case Msg.LoadedGist(code) =>
-        (model.withCode(code), Logger.info("loaded code!"))
+        (model.withCode(code), Cmd.Batch(Logger.info("loaded code!"), CustomCmds.highlightAll))
 
   def view(model: Model): Html[Msg] =
     div(`class`("full-width-container p-0"))(
@@ -53,3 +55,12 @@ object Main:
 
   def main(args: Array[String]): Unit =
     Tyrian.start(document.getElementById("shadergistapp"), init, update, view, subscriptions)
+
+object CustomCmds:
+
+  val highlightAll: Cmd.SideEffect =
+    Cmd.SideEffect { () =>
+      println("triggered?")
+      js.Dynamic.global.window.Prism.highlightAll()
+      ()
+    }
