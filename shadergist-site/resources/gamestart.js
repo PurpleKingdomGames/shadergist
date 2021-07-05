@@ -1,1 +1,1 @@
-window.indigo = require("../../shadergist-game/target/scala-3.0.0/shadergist-game-opt.js");
+window.indigo = require("../../shadergist-game/target/indigoBuildFull/scripts/shadergist-game-opt.js");
