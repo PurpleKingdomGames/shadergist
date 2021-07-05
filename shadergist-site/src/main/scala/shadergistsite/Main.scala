@@ -14,10 +14,17 @@ import tyrian.cmds.Logger
 
 object Main:
 
-  def init: (Model, Cmd[Msg]) =
-    val m = Model.initial(window.location.search)
+  // This is the UV gist, simple but not as harsh to look at as the solid green one...
+  val defaultGist = "davesmith00000/5bed05e26ed97a3fe37d9e0762a77d14"
 
-    (m, if m.gistPath.isEmpty then Cmd.Empty else Cmd.Emit(Msg.LoadGist(m.gistPath)))
+  def init: (Model, Cmd[Msg]) =
+    val m = Model.initial(window.location.search, defaultGist)
+
+    val gistCmd =
+      if m.gistPath.isEmpty then Cmd.Emit(Msg.LoadGist(defaultGist))
+      else Cmd.Emit(Msg.LoadGist(m.gistPath))
+
+    (m, gistCmd)
 
   def update(msg: Msg, model: Model): (Model, Cmd[Msg]) =
     msg match

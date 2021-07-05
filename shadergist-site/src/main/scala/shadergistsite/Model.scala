@@ -13,7 +13,7 @@ final case class Model(
     this.copy(gistPath = newPath)
 
 object Model:
-  def initial(search: String): Model =
+  def initial(search: String, default: String): Model =
     search match
       case p if p.startsWith("?") =>
         val params   = p.substring(1).split("&").toList
@@ -22,4 +22,4 @@ object Model:
         Model(gistPath, None)
 
       case _ =>
-        Model("", None)
+        Model(default, None)
