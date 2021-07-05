@@ -87,39 +87,7 @@ object ShaderGistGame extends IndigoDemo[InitialData, InitialData, Model, Size]:
       Outcome(viewModel)
 
   def present(context: FrameContext[InitialData], model: Model, viewModel: Size): Outcome[SceneUpdateFragment] =
-    Outcome(
-      SceneUpdateFragment(
-        model match
-          case Model.NoGist =>
-            TextBox("No gist to load.", viewModel.width, 20)
-              .withFontFamily(FontFamily.monospace)
-              .withColor(RGBA.Yellow)
-              .withFontSize(Pixels(12))
-              .alignCenter
-              .moveTo(0, viewModel.height / 2)
-
-          case Model.Loading =>
-            TextBox("Loading gist...", viewModel.width, 20)
-              .withFontFamily(FontFamily.monospace)
-              .withColor(RGBA.White)
-              .withFontSize(Pixels(12))
-              .alignCenter
-              .moveTo(0, viewModel.height / 2)
-
-          case Model.Failed =>
-            val gistPath = context.startUpData.maybeGistPath.getOrElse("<missing>")
-            val path     = s"https://gist.githubusercontent.com/$gistPath/raw"
-            TextBox(s"Error loading gist from '$path'", viewModel.width, 20)
-              .withFontFamily(FontFamily.monospace)
-              .withColor(RGBA.Red)
-              .withFontSize(Pixels(12))
-              .alignCenter
-              .moveTo(0, viewModel.height / 2)
-
-          case Model.Ready =>
-            GistEntity(viewModel)
-      )
-    )
+    View.present(context, model, viewModel)
 
 final case class InitialData(screenSize: Size, maybeGistPath: Option[String])
 
@@ -128,28 +96,6 @@ enum Model derives CanEqual:
   case Loading extends Model
   case Failed  extends Model
   case Ready   extends Model
-
-final case class GistEntity(size: Size) extends EntityNode:
-  val position: Point   = Point.zero
-  val depth: Depth      = Depth(1)
-  val flip: Flip        = Flip.default
-  val ref: Point        = Point.zero
-  val rotation: Radians = Radians.zero
-  val scale: Vector2    = Vector2.one
-
-  def withDepth(newDepth: Depth): GistEntity = this
-
-  def toShaderData: ShaderData =
-    ShaderData(GistEntity.shaderId)
-
-object GistEntity:
-  val shaderId: ShaderId =
-    ShaderId("gist shader")
-
-  def shader(fragProgram: AssetName): EntityShader =
-    EntityShader
-      .External(shaderId)
-      .withFragmentProgram(fragProgram)
 
 case object ShaderAdded   extends GlobalEvent
 case object ShaderInvalid extends GlobalEvent
