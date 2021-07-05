@@ -21,7 +21,7 @@ lazy val site =
       name := "shadergist-site",
       scalaJSUseMainModuleInitializer := true,
       libraryDependencies ++= Seq(
-        "io.indigoengine" %%% "tyrian" % "0.2.0-SNAPSHOT"
+        "io.indigoengine" %%% "tyrian" % "0.2.0"
       )
     )
 
