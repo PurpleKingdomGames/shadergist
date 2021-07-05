@@ -83,6 +83,7 @@ object ShaderGistGame extends IndigoDemo[InitialData, InitialData, Model, Size]:
   def updateViewModel(context: FrameContext[InitialData], model: Model, viewModel: Size): GlobalEvent => Outcome[Size] =
     case indigo.shared.events.ViewportResize(newSize) =>
       Outcome(newSize.size)
+
     case _ =>
       Outcome(viewModel)
 
