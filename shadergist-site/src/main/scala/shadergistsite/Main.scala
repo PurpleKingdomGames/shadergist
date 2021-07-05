@@ -60,7 +60,6 @@ object CustomCmds:
 
   val highlightAll: Cmd.SideEffect =
     Cmd.SideEffect { () =>
-      println("triggered?")
       js.Dynamic.global.window.Prism.highlightAll()
       ()
     }
