@@ -1,7 +1,6 @@
 package shadergistsite
 
 import org.scalajs.dom.html
-import shadergistsite.cmds.FileReader
 
 enum Msg:
   case UpdatePath(path: String)   extends Msg

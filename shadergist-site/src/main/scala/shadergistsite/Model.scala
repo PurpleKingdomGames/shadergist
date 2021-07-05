@@ -1,7 +1,5 @@
 package shadergistsite
 
-import shadergistsite.cmds.FileReader
-
 import org.scalajs.dom.html
 
 final case class Model(

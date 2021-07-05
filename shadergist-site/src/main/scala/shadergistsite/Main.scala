@@ -10,7 +10,7 @@ import org.scalajs.dom.document
 import org.scalajs.dom.window
 import scala.scalajs.js
 
-import shadergistsite.cmds.Logger
+import tyrian.cmds.Logger
 
 object Main:
 
