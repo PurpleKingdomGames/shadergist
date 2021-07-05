@@ -4,7 +4,7 @@ import tyrian.{Html, Tyrian, Sub, Cmd, Style}
 import tyrian.Html._
 import tyrian.http._
 
-import pages._
+import views._
 
 import org.scalajs.dom.document
 import org.scalajs.dom.window

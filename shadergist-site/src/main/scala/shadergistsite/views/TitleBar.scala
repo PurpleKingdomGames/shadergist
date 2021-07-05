@@ -1,7 +1,9 @@
-package shadergistsite
+package shadergistsite.views
 
 import tyrian.Html
 import tyrian.Html._
+
+import shadergistsite.Msg
 
 object TitleBar:
   def view(gistPath: String): Html[Msg] =

@@ -1,9 +1,9 @@
-package shadergistsite.pages
+package shadergistsite.views
 
 import tyrian.Html
 import tyrian.Html._
+
 import shadergistsite.Msg
-import shadergistsite.Styles
 
 object Home:
   def view(gistPath: String, gistCode: Option[String]): Html[Msg] =
